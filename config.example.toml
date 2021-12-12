@@ -1,0 +1,8 @@
+# The port to run the server on
+port = "8080"
+# The max file size allowed to be uploaded in bytes
+maxfilesize = 10000000
+# The directory to save the uploaded files to
+directory = "files/"
+# The database uri
+database = "postgres://postgres:postgres@localhost:5432/wolke"
