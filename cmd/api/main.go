@@ -16,7 +16,7 @@ func AuthMiddleware() gin.HandlerFunc {
 		authorizationHeader := c.Request.Header.Get("Authorization")
 
 		var user models.User
-		result := database.Db.First(&user, "token = ?", authorizationHeader)
+		result := database.Db.First(&user, "key = ?", authorizationHeader)
 
 		if result.Error != nil {
 			c.AbortWithStatusJSON(401, gin.H{
