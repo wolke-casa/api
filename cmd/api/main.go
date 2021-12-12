@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/gin-gonic/gin"
 	"github.com/wolke-gallery/api/cmd/api/config"
 	"github.com/wolke-gallery/api/cmd/api/database"
 	"github.com/wolke-gallery/api/cmd/api/database/models"
 	"github.com/wolke-gallery/api/cmd/api/handlers"
-	"github.com/gin-gonic/gin"
 )
 
 func AuthMiddleware() gin.HandlerFunc {
