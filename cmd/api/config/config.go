@@ -21,20 +21,19 @@ var Config config
 func Load() error {
 	// _, err := toml.DecodeFile("config.toml", &Config)
 	err := godotenv.Load()
-
-	// TODO: This is a hacky fix but itll work for now
+	
 	conf := &Config
 
 	conf.Port = os.Getenv("PORT")
 	conf.Directory = os.Getenv("DIRECTORY")
 
-	parsedMaxFileSize, err := strconv.ParseInt(os.Getenv("MAXFILESIZE"), 10, 64)
+	parsedMaxFileSize, err := strconv.ParseInt(os.Getenv("MAX_FILE_SIZE"), 10, 64)
 	conf.MaxFileSize = parsedMaxFileSize
 
 	conf.DatabaseUrl = os.Getenv("DATABASE_URL")
-	conf.BotApiToken = os.Getenv("BOTAPITOKEN")
+	conf.BotApiToken = os.Getenv("BOT_API_TOKEN")
 
-	parsedKeyLength, err := strconv.Atoi(os.Getenv("KEYLENGTH"))
+	parsedKeyLength, err := strconv.Atoi(os.Getenv("KEY_LENGTH"))
 	conf.KeyLength = parsedKeyLength
 
 	return err
