@@ -12,7 +12,7 @@ var Db *gorm.DB
 func Connect() error {
 	var err error
 
-	Db, err = gorm.Open(postgres.Open(config.Config.Database), &gorm.Config{})
+	Db, err = gorm.Open(postgres.Open(config.Config.DatabaseUrl), &gorm.Config{})
 
 	return err
 }

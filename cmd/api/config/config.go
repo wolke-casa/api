@@ -11,7 +11,9 @@ type config struct {
 	Port        string
 	Directory   string
 	MaxFileSize int64
-	Database    string
+	DatabaseUrl string
+	BotApiToken string
+	KeyLength   int
 }
 
 var Config config
@@ -29,7 +31,11 @@ func Load() error {
 	parsedMaxFileSize, err := strconv.ParseInt(os.Getenv("MAXFILESIZE"), 10, 64)
 	conf.MaxFileSize = parsedMaxFileSize
 
-	conf.Database = os.Getenv("DATABASE")
+	conf.DatabaseUrl = os.Getenv("DATABASE_URL")
+	conf.BotApiToken = os.Getenv("BOTAPITOKEN")
+
+	parsedKeyLength, err := strconv.Atoi(os.Getenv("KEYLENGTH"))
+	conf.KeyLength = parsedKeyLength
 
 	return err
 }

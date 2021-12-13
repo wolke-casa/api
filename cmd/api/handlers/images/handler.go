@@ -1,19 +1,11 @@
-package handlers
+package images
 
 import (
 	"fmt"
-
-	"github.com/wolke-gallery/api/cmd/api/config"
 	"github.com/gin-gonic/gin"
 	gonanoid "github.com/matoous/go-nanoid/v2"
+	"github.com/wolke-gallery/api/cmd/api/config"
 )
-
-func Index(c *gin.Context) {
-	c.JSON(200, gin.H{
-		"success": true,
-		"message": "hello world",
-	})
-}
 
 func NewImage(c *gin.Context) {
 	file, err := c.FormFile("file")

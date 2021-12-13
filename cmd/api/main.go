@@ -2,35 +2,16 @@ package main
 
 import (
 	"fmt"
+	"github.com/wolke-gallery/api/cmd/api/handlers/images"
+	"github.com/wolke-gallery/api/cmd/api/handlers/users"
 	"log"
 
 	"github.com/gin-gonic/gin"
 	"github.com/wolke-gallery/api/cmd/api/config"
 	"github.com/wolke-gallery/api/cmd/api/database"
-	"github.com/wolke-gallery/api/cmd/api/database/models"
 	"github.com/wolke-gallery/api/cmd/api/handlers"
 )
 
-func AuthMiddleware() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		authorizationHeader := c.Request.Header.Get("Authorization")
-
-		var user models.User
-		result := database.Db.First(&user, "key = ?", authorizationHeader)
-
-		if result.Error != nil {
-			c.AbortWithStatusJSON(401, gin.H{
-				"success": false,
-				"message": "Invalid authorization token provided",
-			})
-			return
-		}
-
-		c.Next()
-	}
-}
-
-// TODO: Convert all responses to JSON
 func main() {
 	if err := config.Load(); err != nil {
 		log.Fatal(err)
@@ -56,10 +37,12 @@ func main() {
 	r.GET("/", handlers.Index)
 
 	imagesGroup := r.Group("/images")
+	imagesGroup.Use(images.AuthMiddleware())
+	imagesGroup.POST("/new", images.NewImage)
 
-	imagesGroup.Use(AuthMiddleware())
-
-	imagesGroup.POST("/new", handlers.NewImage)
+	userGroup := r.Group("/users")
+	userGroup.Use(users.AuthMiddleware())
+	userGroup.POST("/new", users.NewUser)
 
 	port := fmt.Sprintf(":%s", config.Config.Port)
 
