@@ -9,7 +9,6 @@ import (
 )
 
 func NewUser(c *gin.Context) {
-
 	var user models.RequestUser
 
 	if err := c.ShouldBindJSON(&user); err != nil {
