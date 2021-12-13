@@ -7,7 +7,9 @@ WORKDIR /opt/wolke/api
 
 COPY . .
 
+ENV GIN_MODE release
+
 RUN go get -d -v ./...
 RUN go build -o api cmd/api/main.go
 
-CMD ["api"]
+CMD ["./api"]

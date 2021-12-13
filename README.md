@@ -9,13 +9,18 @@
 
 To deploy Wolke Bot you'll need podman with rootless setup
 
+```
+# All Wolke services will go in this pod
+$ podman pad create --name wolke
+```
+
 To start the database server use:
 
 ```
 # This is where database data will be stored
 $ mkdir postgresql_data
 # Run a postgres container in detached mode
-$ podman run --name wolke_postgres -d -e POSTGRES_DB=wolke -e POSTGRES_PASSWORD=postgres -p 5432:5432 -v $(pwd)/postgresql_data:/var/lib/postgresql/data:z docker.io/postgres:13-alpine
+$ podman run --name wolke_postgres --pod wolke --rm -e POSTGRES_DB=wolke -e POSTGRES_PASSWORD=postgres -v $(pwd)/postgresql_data:/var/lib/postgresql/data:z docker.io/postgres:13-alpine
 ```
 
 To build Wolke API main image use:
@@ -29,7 +34,7 @@ To run Wolke API use:
 
 ```
 # Run Wolke API in detached mode
-$ podman run --name wolke_api -d wolke_api:latest
+$ podman run --name wolke_api --pod wolke -d wolke_api:latest
 ```
 
 # License
