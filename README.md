@@ -11,7 +11,7 @@ To deploy Wolke Bot you'll need podman with rootless setup
 
 ```
 # All Wolke services will go in this pod
-$ podman pad create --name wolke
+$ podman pod create --name wolke
 ```
 
 To start the database server use:
