@@ -13,7 +13,7 @@ func NewImage(c *gin.Context) {
 	if err != nil {
 		c.JSON(400, gin.H{
 			"success": false,
-			"message": "No file uploaded",
+			"message": "No file key found in form data",
 		})
 		return
 	}
@@ -64,7 +64,7 @@ func NewImage(c *gin.Context) {
 		return
 	}
 
-	url := fmt.Sprintf("%s/images/%s", config.Config.Domain, name)
+	url := fmt.Sprintf("%s/%s", config.Config.Domain, name)
 
 	c.JSON(200, gin.H{
 		"success": true,
