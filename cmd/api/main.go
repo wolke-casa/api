@@ -2,9 +2,11 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"os"
+
 	"github.com/wolke-gallery/api/cmd/api/handlers/images"
 	"github.com/wolke-gallery/api/cmd/api/handlers/users"
-	"log"
 
 	"github.com/gin-gonic/gin"
 	"github.com/wolke-gallery/api/cmd/api/config"
@@ -24,6 +26,8 @@ func main() {
 	if err := database.Migrate(); err != nil {
 		log.Fatal(err)
 	}
+
+	_ = os.Mkdir(config.Config.Directory, os.ModePerm)
 
 	log.Println("🚀 Server starting")
 
