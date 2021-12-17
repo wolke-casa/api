@@ -44,7 +44,7 @@ func NewImage(c *gin.Context) {
 		return
 	}
 
-	id, err := gonanoid.New()
+	id, err := gonanoid.New(config.Config.IdLength)
 
 	if err != nil {
 		c.JSON(400, gin.H{
