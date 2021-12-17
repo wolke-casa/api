@@ -71,3 +71,4 @@ func NewImage(c *gin.Context) {
 		"message": url,
 	})
 }
+
