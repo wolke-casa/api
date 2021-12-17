@@ -14,6 +14,7 @@ type config struct {
 	DatabaseUrl string
 	BotApiToken string
 	KeyLength   int
+	Domain      string
 }
 
 var Config config
@@ -21,7 +22,7 @@ var Config config
 func Load() error {
 	// _, err := toml.DecodeFile("config.toml", &Config)
 	err := godotenv.Load()
-	
+
 	conf := &Config
 
 	conf.Port = os.Getenv("PORT")
@@ -35,6 +36,8 @@ func Load() error {
 
 	parsedKeyLength, err := strconv.Atoi(os.Getenv("KEY_LENGTH"))
 	conf.KeyLength = parsedKeyLength
+
+	conf.Domain = os.Getenv("DOMAIN")
 
 	return err
 }

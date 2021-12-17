@@ -32,6 +32,8 @@ func main() {
 	// Set a lower memory limit for multipart forms (default is 32 MiB)
 	r.MaxMultipartMemory = 10 << 20 // 10 MiB
 
+	r.Static("/images", config.Config.Directory)
+
 	r.Use(gin.Recovery())
 
 	r.GET("/", handlers.Index)

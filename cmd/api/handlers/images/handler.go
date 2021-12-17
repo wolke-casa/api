@@ -64,9 +64,10 @@ func NewImage(c *gin.Context) {
 		return
 	}
 
+	url := fmt.Sprintf("%s/images/%s", config.Config.Domain, name)
+
 	c.JSON(200, gin.H{
 		"success": true,
-		"message": "uwu",
-		"name":    name,
+		"message": url,
 	})
 }
