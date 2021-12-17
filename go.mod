@@ -9,6 +9,7 @@ require (
 )
 
 require (
+	github.com/caarlos0/env/v6 v6.8.0 // indirect
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
 	github.com/jackc/pgconn v1.10.1 // indirect
 	github.com/jackc/pgio v1.0.0 // indirect
@@ -24,6 +25,7 @@ require (
 )
 
 require (
+	github.com/caarlos0/env v3.5.0+incompatible
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.13.0 // indirect
 	github.com/go-playground/universal-translator v0.17.0 // indirect
