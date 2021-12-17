@@ -14,6 +14,7 @@ type config struct {
 	DatabaseUrl string
 	BotApiToken string
 	KeyLength   int
+	IdLength    int
 	Domain      string
 }
 
@@ -38,6 +39,9 @@ func Load() error {
 	conf.KeyLength = parsedKeyLength
 
 	conf.Domain = os.Getenv("DOMAIN")
+
+	parsedIdLength, err := strconv.Atoi(os.Getenv("ID_LENGTH"))
+	conf.IdLength = parsedIdLength
 
 	return err
 }
