@@ -14,6 +14,7 @@ import (
 	"github.com/wolke-gallery/api/cmd/api/handlers"
 )
 
+// TODO: Errors should be more informative and precise
 func main() {
 	if err := config.Load(); err != nil {
 		log.Fatal(err)
@@ -41,6 +42,7 @@ func main() {
 	r.Use(gin.Recovery())
 
 	r.GET("/", handlers.Index)
+	r.GET("/domains", handlers.GetDomains)
 
 	imagesGroup := r.Group("/images")
 	imagesGroup.Use(images.AuthMiddleware())

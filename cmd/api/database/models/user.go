@@ -9,7 +9,3 @@ type User struct {
 	User string `gorm:"unique"`
 	Key  string `gorm:"type:varchar(2048);unique"`
 }
-
-type RequestUser struct {
-	User string `json:"user"  binding:"required"`
-}

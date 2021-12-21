@@ -6,14 +6,14 @@ import (
 )
 
 type config struct {
-	Port        string `env:"PORT"`
-	Directory   string `env:"DIRECTORY"`
-	MaxFileSize int64  `env:"MAX_FILE_SIZE"`
-	DatabaseUrl string `env:"DATABASE_URL"`
-	BotApiToken string `env:"BOT_API_TOKEN"`
-	KeyLength   int    `env:"KEY_LENGTH"`
-	IdLength    int    `env:"ID_LENGTH"`
-	Domain      string `env:"DOMAIN"`
+	Port        string   `env:"PORT"`
+	Directory   string   `env:"DIRECTORY"`
+	MaxFileSize int64    `env:"MAX_FILE_SIZE"`
+	DatabaseUrl string   `env:"DATABASE_URL"`
+	BotApiToken string   `env:"BOT_API_TOKEN"`
+	KeyLength   int      `env:"KEY_LENGTH"`
+	IdLength    int      `env:"ID_LENGTH"`
+	Domains     []string `env:"DOMAINS" envSeparator:","`
 }
 
 var Config config

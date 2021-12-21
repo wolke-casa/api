@@ -12,3 +12,12 @@ func GenerateSecureToken(length int) string {
 	}
 	return hex.EncodeToString(b)
 }
+
+func CheckIfElementExists(slice []string, key string) bool {
+	for _, v := range slice {
+		if v == key {
+			return true
+		}
+	}
+	return false
+}

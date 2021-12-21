@@ -9,19 +9,19 @@ import (
 )
 
 func NewUser(c *gin.Context) {
-	var user models.RequestUser
+	var data models.RequestUser
 
-	if err := c.ShouldBindJSON(&user); err != nil {
+	if err := c.ShouldBindJSON(&data); err != nil {
 		c.JSON(400, gin.H{
 			"success": false,
-			"message": "Invalid user",
+			"message": "Invalid user in body",
 		})
 		return
 	}
 
 	key := utils.GenerateSecureToken(config.Config.KeyLength)
 
-	newUser := models.User{User: user.User, Key: key}
+	newUser := models.User{User: data.User, Key: key}
 
 	// This catches *all* errors when creating
 	if err := database.Db.Create(&newUser).Error; err != nil {
