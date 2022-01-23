@@ -23,7 +23,7 @@ func NewUser(c *gin.Context) {
 
 	newUser := models.User{User: data.User, Key: key}
 
-	// This catches *all* errors when creating
+	// TODO: This could be more concise because right now it catches all errors
 	if err := database.Db.Create(&newUser).Error; err != nil {
 		c.JSON(400, gin.H{
 			"success": false,
