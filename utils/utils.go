@@ -1,9 +1,18 @@
 package utils
 
 import (
+	"bytes"
 	"crypto/rand"
 	"encoding/hex"
+	"io"
 )
+
+func IoReaderToByteSlice(body io.Reader) []byte {
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(body)
+
+	return buf.Bytes()
+}
 
 func GenerateSecureToken(length int) string {
 	b := make([]byte, length)

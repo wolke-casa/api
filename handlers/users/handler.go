@@ -2,10 +2,10 @@ package users
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/wolke-gallery/api/cmd/api/config"
-	"github.com/wolke-gallery/api/cmd/api/database"
-	"github.com/wolke-gallery/api/cmd/api/database/models"
-	"github.com/wolke-gallery/api/cmd/api/utils"
+	"github.com/wolke-gallery/api/config"
+	"github.com/wolke-gallery/api/database"
+	"github.com/wolke-gallery/api/database/models"
+	"github.com/wolke-gallery/api/utils"
 )
 
 func NewUser(c *gin.Context) {

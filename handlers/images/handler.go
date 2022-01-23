@@ -2,13 +2,70 @@ package images
 
 import (
 	"fmt"
+	"net/http"
 	"strings"
 
 	"github.com/gin-gonic/gin"
 	gonanoid "github.com/matoous/go-nanoid/v2"
-	"github.com/wolke-gallery/api/cmd/api/config"
-	"github.com/wolke-gallery/api/cmd/api/utils"
+	"github.com/wolke-gallery/api/config"
+	"github.com/wolke-gallery/api/database/models"
+	"github.com/wolke-gallery/api/medium"
+	"github.com/wolke-gallery/api/utils"
 )
+
+/*
+curl -X POST http://localhost:8080/images/new \
+-H 'Content-Type: multipart/form-data' \
+-H 'Authorization: owo' \
+-F 'domain=domiscute.com' \
+-F 'file=@/home/dominic/Downloads/33_left.jpg'
+*/
+
+func GetImage(c *gin.Context) {
+	var data models.RequestGetImage
+
+	if err := c.ShouldBindUri(&data); err != nil {
+		c.JSON(400, gin.H{
+			"success": false,
+			"message": "No `id` in uri",
+		})
+		return
+
+	}
+
+	reader, err := medium.Storage.Get(data.Id)
+
+	if err != nil {
+		fmt.Println(err)
+
+		c.JSON(404, gin.H{
+			"success": false,
+			"message": "That image doesnt exist",
+		})
+		return
+	}
+
+	bytes := utils.IoReaderToByteSlice(reader)
+
+	bytes512 := make([]byte, 512)
+	copy(bytes512, bytes)
+
+	contentType := http.DetectContentType(bytes512)
+
+	if err != nil {
+		fmt.Println(err)
+
+		c.JSON(500, gin.H{
+			"success": false,
+			"message": "Unknown error occurred",
+		})
+		return
+	}
+
+	fmt.Println(contentType)
+
+	c.Data(200, contentType, bytes)
+}
 
 func NewImage(c *gin.Context) {
 	file, err := c.FormFile("file")
@@ -34,7 +91,7 @@ func NewImage(c *gin.Context) {
 	if !utils.CheckIfElementExists(config.Config.Domains, domain) {
 		domains := strings.Join(config.Config.Domains, ", ")
 
-		c.JSON(400, gin.H{
+		c.JSON(404, gin.H{
 			"success": false,
 			"message": "Invalid domain. Valid are " + domains,
 		})
@@ -43,7 +100,7 @@ func NewImage(c *gin.Context) {
 
 	// TODO: Ideally we would tell the user the max file size in a humanized form
 	if file.Size > config.Config.MaxFileSize {
-		c.JSON(400, gin.H{
+		c.JSON(413, gin.H{
 			"success": false,
 			"message": "File is too big",
 		})
@@ -84,7 +141,19 @@ func NewImage(c *gin.Context) {
 
 	name := fmt.Sprintf("%s.%s", id, extension)
 
-	if err := c.SaveUploadedFile(file, config.Config.Directory+name); err != nil {
+	src, err := file.Open()
+	if err != nil {
+		c.JSON(500, gin.H{
+			"success": false,
+			"message": "Failed to get file",
+		})
+		return
+	}
+	defer src.Close()
+
+	err = medium.Storage.Put(src, name)
+
+	if err != nil {
 		c.JSON(500, gin.H{
 			"success": false,
 			"message": "Failed to save file",

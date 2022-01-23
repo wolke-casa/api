@@ -7,3 +7,7 @@ type RequestUser struct {
 type RequestImage struct {
 	Domain string `form:"domain" binding:"required"`
 }
+
+type RequestGetImage struct {
+	Id string `uri:"id" binding:"required"`
+}

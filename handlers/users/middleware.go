@@ -1,19 +1,15 @@
-package images
+package users
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/wolke-gallery/api/cmd/api/database"
-	"github.com/wolke-gallery/api/cmd/api/database/models"
+	"github.com/wolke-gallery/api/config"
 )
 
 func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authorizationHeader := c.Request.Header.Get("Authorization")
 
-		var user models.User
-		result := database.Db.First(&user, "key = ?", authorizationHeader)
-
-		if result.Error != nil {
+		if config.Config.BotApiKey != authorizationHeader {
 			c.AbortWithStatusJSON(401, gin.H{
 				"success": false,
 				"message": "Invalid authorization token provided",

@@ -4,7 +4,7 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/wolke-gallery/api/cmd/api/config"
+	"github.com/wolke-gallery/api/config"
 )
 
 func Index(c *gin.Context) {

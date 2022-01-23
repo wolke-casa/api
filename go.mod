@@ -3,13 +3,14 @@ module github.com/wolke-gallery/api
 go 1.17
 
 require (
-	github.com/BurntSushi/toml v0.3.1
+	github.com/aws/aws-sdk-go v1.42.25
+	github.com/caarlos0/env/v6 v6.8.0
 	github.com/gin-gonic/gin v1.7.7
+	github.com/joho/godotenv v1.4.0
 	github.com/matoous/go-nanoid/v2 v2.0.0
 )
 
 require (
-	github.com/caarlos0/env/v6 v6.8.0 // indirect
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
 	github.com/jackc/pgconn v1.10.1 // indirect
 	github.com/jackc/pgio v1.0.0 // indirect
@@ -20,12 +21,11 @@ require (
 	github.com/jackc/pgx/v4 v4.14.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.3 // indirect
-	github.com/joho/godotenv v1.4.0 // indirect
+	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	golang.org/x/text v0.3.7 // indirect
 )
 
 require (
-	github.com/caarlos0/env v3.5.0+incompatible
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.13.0 // indirect
 	github.com/go-playground/universal-translator v0.17.0 // indirect
