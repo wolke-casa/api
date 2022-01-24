@@ -17,7 +17,6 @@ func AuthMiddleware() gin.HandlerFunc {
 		var user models.User
 		err := database.Db.First(&user, "key = ?", authorizationHeader).Error
 
-		// TODO: Test that this actually works as record not found
 		if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
 			error := handlers.ErrInvalidAuthorization
 

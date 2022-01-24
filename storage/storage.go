@@ -26,7 +26,7 @@ func Initialize() error {
 		localStorage := local.New(config.Config.Directory)
 		Storage = localStorage
 	default:
-		return errors.New("invalid `medium`. must be `S3` or `local`")
+		return errors.New(`invalid "medium", must be "S3" or "local"`)
 	}
 
 	return nil

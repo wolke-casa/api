@@ -19,7 +19,7 @@ import (
 curl -X POST http://localhost:8080/images/new \
 -H 'Content-Type: multipart/form-data' \
 -H 'Authorization: owo' \
--F 'domain=domiscute.com' \
+-F 'domain=domiscuste.com' \
 -F 'file=@/home/dominic/Downloads/33_left.jpg'
 */
 
@@ -65,8 +65,6 @@ func GetImage(c *gin.Context) {
 		return
 	}
 
-	fmt.Println(contentType)
-
 	c.Data(200, contentType, bytes)
 }
 
@@ -97,7 +95,7 @@ func NewImage(c *gin.Context) {
 
 	if !utils.CheckIfElementExists(config.Config.Domains, domain) {
 		domains := strings.Join(config.Config.Domains, ", ")
-		error := handlers.ErrMissingData
+		error := handlers.ErrInvalid
 
 		c.JSON(error.Status, gin.H{
 			"success": false,
