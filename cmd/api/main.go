@@ -3,14 +3,14 @@ package main
 import (
 	"log"
 	"os"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/wolke-gallery/api/config"
 	"github.com/wolke-gallery/api/database"
-	"github.com/wolke-gallery/api/handlers"
 	"github.com/wolke-gallery/api/handlers/images"
 	"github.com/wolke-gallery/api/handlers/users"
-	"github.com/wolke-gallery/api/medium"
+	"github.com/wolke-gallery/api/storage"
 )
 
 func main() {
@@ -26,11 +26,11 @@ func main() {
 		log.Fatal(err)
 	}
 
-	if config.Config.Medium == "local" {
+	if config.Config.Storage == "local" {
 		_ = os.Mkdir(config.Config.Directory, os.ModePerm)
 	}
 
-	if err := medium.Initialize(); err != nil {
+	if err := storage.Initialize(); err != nil {
 		log.Fatal(err)
 	}
 
@@ -43,8 +43,14 @@ func main() {
 
 	r.Use(gin.Recovery())
 
-	r.GET("/", handlers.Index)
-	r.GET("/domains", handlers.GetDomains)
+	r.GET("/domains", func(c *gin.Context) {
+		domains := strings.Join(config.Config.Domains, ",")
+
+		c.JSON(200, gin.H{
+			"success": true,
+			"message": domains,
+		})
+	})
 
 	imagesGroup := r.Group("/images")
 	imagesGroup.Use(images.AuthMiddleware())

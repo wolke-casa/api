@@ -9,7 +9,7 @@ import (
 	gonanoid "github.com/matoous/go-nanoid/v2"
 	"github.com/wolke-gallery/api/config"
 	"github.com/wolke-gallery/api/database/models"
-	"github.com/wolke-gallery/api/medium"
+	"github.com/wolke-gallery/api/storage"
 	"github.com/wolke-gallery/api/utils"
 )
 
@@ -33,7 +33,7 @@ func GetImage(c *gin.Context) {
 
 	}
 
-	reader, err := medium.Storage.Get(data.Id)
+	reader, err := storage.Storage.Get(data.Id)
 
 	if err != nil {
 		fmt.Println(err)
@@ -151,7 +151,7 @@ func NewImage(c *gin.Context) {
 	}
 	defer src.Close()
 
-	err = medium.Storage.Put(src, name)
+	err = storage.Storage.Put(src, name)
 
 	if err != nil {
 		c.JSON(500, gin.H{

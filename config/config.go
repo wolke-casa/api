@@ -13,7 +13,7 @@ type config struct {
 	KeyLength   int      `env:"KEY_LENGTH,required"`
 	IdLength    int      `env:"ID_LENGTH,required"`
 	Domains     []string `env:"DOMAINS,required" envSeparator:","`
-	Medium      string   `env:"MEDIUM,required"`
+	Storage     string   `env:"STORAGE,required"`
 	Directory   string   `env:"DIRECTORY"`
 	AwsBucket   string   `env:"AWS_BUCKET"`
 	AwsRegion   string   `env:"AWS_REGION"`

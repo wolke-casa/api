@@ -1,24 +1,24 @@
-package medium
+package storage
 
 import (
 	"errors"
 	"io"
 
 	"github.com/wolke-gallery/api/config"
-	"github.com/wolke-gallery/api/medium/local"
-	"github.com/wolke-gallery/api/medium/s3"
+	"github.com/wolke-gallery/api/storage/local"
+	"github.com/wolke-gallery/api/storage/s3"
 )
 
-type Medium interface {
+type storage interface {
 	Put(content io.Reader, path string) error
 	Get(path string) (io.ReadCloser, error)
 	Delete(path string) error
 }
 
-var Storage Medium
+var Storage storage
 
 func Initialize() error {
-	switch config.Config.Medium {
+	switch config.Config.Storage {
 	case "S3":
 		s3Storage := s3.New(config.Config.AwsKey, config.Config.AwsSecret, config.Config.AwsRegion, config.Config.AwsBucket)
 		Storage = s3Storage
