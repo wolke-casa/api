@@ -7,8 +7,10 @@ import (
 
 	"github.com/gin-gonic/gin"
 	gonanoid "github.com/matoous/go-nanoid/v2"
+	"github.com/sbani/go-humanizer/units"
 	"github.com/wolke-gallery/api/config"
 	"github.com/wolke-gallery/api/database/models"
+	"github.com/wolke-gallery/api/handlers"
 	"github.com/wolke-gallery/api/storage"
 	"github.com/wolke-gallery/api/utils"
 )
@@ -25,22 +27,23 @@ func GetImage(c *gin.Context) {
 	var data models.RequestGetImage
 
 	if err := c.ShouldBindUri(&data); err != nil {
-		c.JSON(400, gin.H{
+		error := handlers.ErrMissingData
+
+		c.JSON(error.Status, gin.H{
 			"success": false,
-			"message": "No `id` in uri",
+			"message": strings.Replace(error.Error, "{}", "id", 1),
 		})
 		return
-
 	}
 
 	reader, err := storage.Storage.Get(data.Id)
 
 	if err != nil {
-		fmt.Println(err)
+		error := handlers.ErrResourceNotFound
 
-		c.JSON(404, gin.H{
+		c.JSON(error.Status, gin.H{
 			"success": false,
-			"message": "That image doesnt exist",
+			"message": error.Error,
 		})
 		return
 	}
@@ -53,11 +56,11 @@ func GetImage(c *gin.Context) {
 	contentType := http.DetectContentType(bytes512)
 
 	if err != nil {
-		fmt.Println(err)
+		error := handlers.ErrUnknownErrorOccurred
 
-		c.JSON(500, gin.H{
+		c.JSON(error.Status, gin.H{
 			"success": false,
-			"message": "Unknown error occurred",
+			"message": error.Error,
 		})
 		return
 	}
@@ -71,9 +74,11 @@ func NewImage(c *gin.Context) {
 	file, err := c.FormFile("file")
 
 	if err != nil {
-		c.JSON(400, gin.H{
+		error := handlers.ErrMissingData
+
+		c.JSON(error.Status, gin.H{
 			"success": false,
-			"message": "No `file` key found in form data",
+			"message": strings.Replace(error.Error, "{}", "file", 1),
 		})
 		return
 	}
@@ -81,28 +86,32 @@ func NewImage(c *gin.Context) {
 	domain := c.PostForm("domain")
 
 	if domain == "" {
-		c.JSON(400, gin.H{
+		error := handlers.ErrMissingData
+
+		c.JSON(error.Status, gin.H{
 			"success": false,
-			"message": "No `domain` key found in form data",
+			"message": strings.Replace(error.Error, "{}", "domain", 1),
 		})
 		return
 	}
 
 	if !utils.CheckIfElementExists(config.Config.Domains, domain) {
 		domains := strings.Join(config.Config.Domains, ", ")
+		error := handlers.ErrMissingData
 
-		c.JSON(404, gin.H{
+		c.JSON(error.Status, gin.H{
 			"success": false,
-			"message": "Invalid domain. Valid are " + domains,
+			"message": strings.Replace(strings.Replace(error.Error, "{}", "domain", 1), "{}", domains, 1),
 		})
 		return
 	}
 
-	// TODO: Ideally we would tell the user the max file size in a humanized form
 	if file.Size > config.Config.MaxFileSize {
-		c.JSON(413, gin.H{
+		error := handlers.ErrFileTooBig
+
+		c.JSON(error.Status, gin.H{
 			"success": false,
-			"message": "File is too big",
+			"message": strings.Replace(error.Error, "{}", units.BinarySuffix(float64(config.Config.MaxFileSize)), 1),
 		})
 		return
 	}
@@ -118,9 +127,11 @@ func NewImage(c *gin.Context) {
 	case "image/gif":
 		extension = "gif"
 	default:
-		c.JSON(400, gin.H{
+		error := handlers.ErrInvalid
+
+		c.JSON(error.Status, gin.H{
 			"success": false,
-			"message": "Invalid file type",
+			"message": strings.Replace(strings.Replace(error.Error, "{}", "file type", 1), "{}", "jpg, png and gif", 1),
 		})
 		return
 	}
@@ -132,9 +143,11 @@ func NewImage(c *gin.Context) {
 	id, err := gonanoid.New(config.Config.IdLength)
 
 	if err != nil {
-		c.JSON(500, gin.H{
+		error := handlers.ErrUnknownErrorOccurred
+
+		c.JSON(error.Status, gin.H{
 			"success": false,
-			"message": "Failed to generate id.. please try again",
+			"message": error.Error,
 		})
 		return
 	}
@@ -143,9 +156,11 @@ func NewImage(c *gin.Context) {
 
 	src, err := file.Open()
 	if err != nil {
-		c.JSON(500, gin.H{
+		error := handlers.ErrUnknownErrorOccurred
+
+		c.JSON(error.Status, gin.H{
 			"success": false,
-			"message": "Failed to get file",
+			"message": error.Error,
 		})
 		return
 	}
@@ -154,9 +169,11 @@ func NewImage(c *gin.Context) {
 	err = storage.Storage.Put(src, name)
 
 	if err != nil {
-		c.JSON(500, gin.H{
+		error := handlers.ErrUnknownErrorOccurred
+
+		c.JSON(error.Status, gin.H{
 			"success": false,
-			"message": "Failed to save file",
+			"message": error.Error,
 		})
 		return
 	}

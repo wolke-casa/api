@@ -3,6 +3,7 @@ package users
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/wolke-gallery/api/config"
+	"github.com/wolke-gallery/api/handlers"
 )
 
 func AuthMiddleware() gin.HandlerFunc {
@@ -10,9 +11,11 @@ func AuthMiddleware() gin.HandlerFunc {
 		authorizationHeader := c.Request.Header.Get("Authorization")
 
 		if config.Config.BotApiKey != authorizationHeader {
-			c.AbortWithStatusJSON(401, gin.H{
+			error := handlers.ErrInvalidAuthorization
+
+			c.AbortWithStatusJSON(error.Status, gin.H{
 				"success": false,
-				"message": "Invalid authorization token provided",
+				"message": error.Error,
 			})
 			return
 		}

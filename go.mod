@@ -22,6 +22,7 @@ require (
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.3 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
+	github.com/sbani/go-humanizer v0.3.2 // indirect
 	golang.org/x/text v0.3.7 // indirect
 )
 
