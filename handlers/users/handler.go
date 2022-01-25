@@ -15,11 +15,11 @@ func NewUser(c *gin.Context) {
 	var data models.RequestUser
 
 	if err := c.ShouldBindJSON(&data); err != nil {
-		error := handlers.ErrInvalidInRequest
+		error, status := handlers.ErrInvalidDataInRequest("user")
 
-		c.JSON(error.Status, gin.H{
+		c.JSON(status, gin.H{
 			"success": false,
-			"message": strings.Replace(error.Error, "{}", "user", 1),
+			"message": error,
 		})
 		return
 	}
@@ -38,21 +38,21 @@ func NewUser(c *gin.Context) {
 	err := database.Db.Create(&newUser).Error
 
 	if err != nil && strings.Contains(err.Error(), "SQLSTATE 23505") {
-		error := handlers.ErrUserAlreadyHasApiKey
+		error, status := handlers.ErrUserAlreadyHasApiKey()
 
-		c.JSON(error.Status, gin.H{
+		c.JSON(status, gin.H{
 			"success": false,
-			"message": error.Error,
+			"message": error,
 		})
 		return
 	}
 
 	if err != nil {
-		error := handlers.ErrUnknownErrorOccurred
+		error, status := handlers.ErrUnknownErrorOccurred()
 
-		c.JSON(error.Status, gin.H{
+		c.JSON(status, gin.H{
 			"success": false,
-			"message": error.Error,
+			"message": error,
 		})
 		return
 	}

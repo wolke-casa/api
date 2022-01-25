@@ -27,11 +27,11 @@ func GetImage(c *gin.Context) {
 	var data models.RequestGetImage
 
 	if err := c.ShouldBindUri(&data); err != nil {
-		error := handlers.ErrMissingData
+		error, status := handlers.ErrMissingData("id")
 
-		c.JSON(error.Status, gin.H{
+		c.JSON(status, gin.H{
 			"success": false,
-			"message": strings.Replace(error.Error, "{}", "id", 1),
+			"message": error,
 		})
 		return
 	}
@@ -39,11 +39,11 @@ func GetImage(c *gin.Context) {
 	reader, err := storage.Storage.Get(data.Id)
 
 	if err != nil {
-		error := handlers.ErrResourceNotFound
+		error, status := handlers.ErrResourceNotFound()
 
-		c.JSON(error.Status, gin.H{
+		c.JSON(status, gin.H{
 			"success": false,
-			"message": error.Error,
+			"message": error,
 		})
 		return
 	}
@@ -56,11 +56,11 @@ func GetImage(c *gin.Context) {
 	contentType := http.DetectContentType(bytes512)
 
 	if err != nil {
-		error := handlers.ErrUnknownErrorOccurred
+		error, status := handlers.ErrUnknownErrorOccurred()
 
-		c.JSON(error.Status, gin.H{
+		c.JSON(status, gin.H{
 			"success": false,
-			"message": error.Error,
+			"message": error,
 		})
 		return
 	}
@@ -72,11 +72,11 @@ func NewImage(c *gin.Context) {
 	file, err := c.FormFile("file")
 
 	if err != nil {
-		error := handlers.ErrMissingData
+		error, status := handlers.ErrMissingData("file")
 
-		c.JSON(error.Status, gin.H{
+		c.JSON(status, gin.H{
 			"success": false,
-			"message": strings.Replace(error.Error, "{}", "file", 1),
+			"message": error,
 		})
 		return
 	}
@@ -84,32 +84,32 @@ func NewImage(c *gin.Context) {
 	domain := c.PostForm("domain")
 
 	if domain == "" {
-		error := handlers.ErrMissingData
+		error, status := handlers.ErrMissingData("domain")
 
-		c.JSON(error.Status, gin.H{
+		c.JSON(status, gin.H{
 			"success": false,
-			"message": strings.Replace(error.Error, "{}", "domain", 1),
+			"message": error,
 		})
 		return
 	}
 
 	if !utils.CheckIfElementExists(config.Config.Domains, domain) {
 		domains := strings.Join(config.Config.Domains, ", ")
-		error := handlers.ErrInvalid
+		error, status := handlers.ErrInvalidData("domain", domains)
 
-		c.JSON(error.Status, gin.H{
+		c.JSON(status, gin.H{
 			"success": false,
-			"message": strings.Replace(strings.Replace(error.Error, "{}", "domain", 1), "{}", domains, 1),
+			"message": error,
 		})
 		return
 	}
 
 	if file.Size > config.Config.MaxFileSize {
-		error := handlers.ErrFileTooBig
+		error, status := handlers.ErrFileTooBig(units.BinarySuffix(float64(config.Config.MaxFileSize)))
 
-		c.JSON(error.Status, gin.H{
+		c.JSON(status, gin.H{
 			"success": false,
-			"message": strings.Replace(error.Error, "{}", units.BinarySuffix(float64(config.Config.MaxFileSize)), 1),
+			"message": error,
 		})
 		return
 	}
@@ -125,11 +125,11 @@ func NewImage(c *gin.Context) {
 	case "image/gif":
 		extension = "gif"
 	default:
-		error := handlers.ErrInvalid
+		error, status := handlers.ErrInvalidData("file type", "jpg, png and gif")
 
-		c.JSON(error.Status, gin.H{
+		c.JSON(status, gin.H{
 			"success": false,
-			"message": strings.Replace(strings.Replace(error.Error, "{}", "file type", 1), "{}", "jpg, png and gif", 1),
+			"message": error,
 		})
 		return
 	}
@@ -141,11 +141,11 @@ func NewImage(c *gin.Context) {
 	id, err := gonanoid.New(config.Config.IdLength)
 
 	if err != nil {
-		error := handlers.ErrUnknownErrorOccurred
+		error, status := handlers.ErrUnknownErrorOccurred()
 
-		c.JSON(error.Status, gin.H{
+		c.JSON(status, gin.H{
 			"success": false,
-			"message": error.Error,
+			"message": error,
 		})
 		return
 	}
@@ -154,11 +154,11 @@ func NewImage(c *gin.Context) {
 
 	src, err := file.Open()
 	if err != nil {
-		error := handlers.ErrUnknownErrorOccurred
+		error, status := handlers.ErrUnknownErrorOccurred()
 
-		c.JSON(error.Status, gin.H{
+		c.JSON(status, gin.H{
 			"success": false,
-			"message": error.Error,
+			"message": error,
 		})
 		return
 	}
@@ -167,11 +167,11 @@ func NewImage(c *gin.Context) {
 	err = storage.Storage.Put(src, name)
 
 	if err != nil {
-		error := handlers.ErrUnknownErrorOccurred
+		error, status := handlers.ErrUnknownErrorOccurred()
 
-		c.JSON(error.Status, gin.H{
+		c.JSON(status, gin.H{
 			"success": false,
-			"message": error.Error,
+			"message": error,
 		})
 		return
 	}

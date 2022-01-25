@@ -11,7 +11,7 @@ import (
 )
 
 type Storage struct {
-	bucket string
+	bucket   string
 	s3       *s3.S3
 	uploader *s3manager.Uploader
 }
@@ -30,7 +30,7 @@ func New(awsKey string, awsSecret string, awsRegion string, awsBucket string) *S
 	return &Storage{
 		s3:       s3.New(session),
 		uploader: s3manager.NewUploader(session),
-		bucket: awsBucket,
+		bucket:   awsBucket,
 	}
 }
 

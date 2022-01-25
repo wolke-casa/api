@@ -11,11 +11,11 @@ func AuthMiddleware() gin.HandlerFunc {
 		authorizationHeader := c.Request.Header.Get("Authorization")
 
 		if config.Config.BotApiKey != authorizationHeader {
-			error := handlers.ErrInvalidAuthorization
+			error, status := handlers.ErrInvalidAuthorization()
 
-			c.AbortWithStatusJSON(error.Status, gin.H{
+			c.AbortWithStatusJSON(status, gin.H{
 				"success": false,
-				"message": error.Error,
+				"message": error,
 			})
 			return
 		}

@@ -18,21 +18,21 @@ func AuthMiddleware() gin.HandlerFunc {
 		err := database.Db.First(&user, "key = ?", authorizationHeader).Error
 
 		if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
-			error := handlers.ErrInvalidAuthorization
+			error, status := handlers.ErrInvalidAuthorization()
 
-			c.AbortWithStatusJSON(error.Status, gin.H{
+			c.AbortWithStatusJSON(status, gin.H{
 				"success": false,
-				"message": error.Error,
+				"message": error,
 			})
 			return
 		}
 
 		if err != nil {
-			error := handlers.ErrUnknownErrorOccurred
+			error, status := handlers.ErrUnknownErrorOccurred()
 
-			c.JSON(error.Status, gin.H{
+			c.AbortWithStatusJSON(status, gin.H{
 				"success": false,
-				"message": error.Error,
+				"message": error,
 			})
 			return
 		}
