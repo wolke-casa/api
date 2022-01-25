@@ -19,7 +19,7 @@ import (
 curl -X POST http://localhost:8080/images/new \
 -H 'Content-Type: multipart/form-data' \
 -H 'Authorization: owo' \
--F 'domain=domiscuste.com' \
+-F 'domain=domiscute.com' \
 -F 'file=@/home/dominic/Downloads/33_left.jpg'
 */
 
